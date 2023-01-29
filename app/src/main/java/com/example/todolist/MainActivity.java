@@ -8,13 +8,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private FloatingActionButton buttonAddNotes;
     private LinearLayout linearLayoutNotes;
-    private ArrayList<Note> notes = new ArrayList<>();
+    private final Database database = Database.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +21,16 @@ public class MainActivity extends AppCompatActivity {
 
         initViews();
 
-        for (int i = 0; i < 20; i++) {
-            Random random = new Random();
-            Note note = new Note("Note " + i, random.nextInt(3), i);
-            notes.add(note);
-        }
-        showNotes();
-
         buttonAddNotes.setOnClickListener(v -> {
             Intent intent = AddNoteActivity.newIntent(this);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showNotes();
     }
 
     private void initViews() {
@@ -42,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotes() {
-        for (Note note : notes) {
+        linearLayoutNotes.removeAllViews();
+        for (Note note : database.getNotes()) {
             //Из макета xml создаем View элемент
             View view = getLayoutInflater().inflate(
                     R.layout.note_item,
