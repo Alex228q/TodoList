@@ -15,6 +15,8 @@ public class Database {
         return instance;
     }
 
+
+
     public void add(Note note) {
         notes.add(note);
     }
