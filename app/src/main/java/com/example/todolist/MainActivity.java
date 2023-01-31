@@ -14,14 +14,14 @@ public class MainActivity extends AppCompatActivity {
     NotesAdapter notesAdapter;
     private FloatingActionButton buttonAddNotes;
     private RecyclerView recyclerViewNotes;
-    private final Database database = Database.getInstance();
+    private NotesDatabase notesDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-
+        notesDatabase = NotesDatabase.getInstance(getApplication());
         notesAdapter = new NotesAdapter();
         //Устанавливаем слушатель клика на элементы для удаления
 //        notesAdapter.setOnNoteClickListener(note -> {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Note note = notesAdapter.getNotes().get(position);
-                database.remove(note.getId());
+                notesDatabase.notesDao().remove(note.getId());
                 showNotes();
             }
         });
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotes() {
-        notesAdapter.setNotes(database.getNotes());
+        notesAdapter.setNotes(notesDatabase.notesDao().getNotes());
     }
 }
 
