@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "notes")
 public class Note {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    private String text;
-    private int priority;
+    private final int id;
+    private final String text;
+    private final int priority;
 
 
 
@@ -24,8 +24,7 @@ public class Note {
     //room не поймет какой конструктор использовать
     @Ignore
     public Note(String text, int priority) {
-        this.text = text;
-        this.priority = priority;
+        this(text,priority,0);
 
     }
 

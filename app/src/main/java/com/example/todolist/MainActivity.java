@@ -23,16 +23,10 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         notesDatabase = NotesDatabase.getInstance(getApplication());
         notesAdapter = new NotesAdapter();
-        //Устанавливаем слушатель клика на элементы для удаления
-//        notesAdapter.setOnNoteClickListener(note -> {
-//            database.remove(note.getId());
-//            showNotes();
-//        });
 
         recyclerViewNotes.setAdapter(notesAdapter);
         //Установка вида отображения элементов vertical horizontal grid (в простых вариантах можно задать в макете)
         //recyclerViewNotes.setLayoutManager(new LinearLayoutManager(this));
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
