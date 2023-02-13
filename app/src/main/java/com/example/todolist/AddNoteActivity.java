@@ -3,6 +3,8 @@ package com.example.todolist;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -16,6 +18,10 @@ public class AddNoteActivity extends AppCompatActivity {
     private RadioButton radioButtonLow;
     private RadioButton radioButtonMedium;
     private NotesDatabase notesDatabase;
+
+    //все работы с view выполняються только на главном потоке(handler хранит ссылку на какой-то поток)
+    //метод finish() также относиться к работе с view
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
 
     @Override
@@ -32,9 +38,12 @@ public class AddNoteActivity extends AppCompatActivity {
         String textNote = editTextNote.getText().toString().trim();
         int priority = getPriority();
         Note note = new Note(textNote, priority);
-        notesDatabase.notesDao().add(note);
+        Thread thread = new Thread(() -> {
+            notesDatabase.notesDao().add(note);
+            handler.post(this::finish);
+        });
+        thread.start();
 
-        finish();
     }
 
     private int getPriority() {
