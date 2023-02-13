@@ -20,8 +20,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         return new ArrayList<>(notes);
     }
 
+    //добавлять в адаптер базу данных или работу с сетью не нужно
+
+    //добавляем переменную интерфейсного типа для слушатель по элементу
     private OnNoteClickListener onNoteClickListener;
 
+    //из активити устанавливаем слушатель клика в данный адаптер (добавляем сеттер)
     public void setOnNoteClickListener(OnNoteClickListener onNoteClickListener) {
         this.onNoteClickListener = onNoteClickListener;
     }
@@ -67,9 +71,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         holder.textViewNote.setBackgroundColor(color);
 
+        //устанавливаем слушатель клика и в методе onClick реагируем на клики
         holder.textViewNote.setOnClickListener(view -> {
             if (onNoteClickListener != null) {
-                onNoteClickListener.onNoteClick(note);
+                onNoteClickListener.onNoteClick(note, view);
             }
         });
     }
@@ -80,8 +85,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     }
 
     // class NotesViewHolder хранит ссылки на все view элементы с которыми нужно будет работать
-    class NotesViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewNote;
+    static class NotesViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewNote;
 
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,8 +94,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         }
     }
 
-    //Слушатель клика по элементу списка
+    //определяем интерфейс слушатель клика по элементу списка
     interface OnNoteClickListener {
-        void onNoteClick(Note note);
+        void onNoteClick(Note note, View view);
     }
 }
