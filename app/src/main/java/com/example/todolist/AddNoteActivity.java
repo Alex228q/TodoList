@@ -3,13 +3,13 @@ package com.example.todolist;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 public class AddNoteActivity extends AppCompatActivity {
 
@@ -17,20 +17,20 @@ public class AddNoteActivity extends AppCompatActivity {
     private Button buttonSaveNote;
     private RadioButton radioButtonLow;
     private RadioButton radioButtonMedium;
-    private NotesDatabase notesDatabase;
 
-    //все работы с view выполняються только на главном потоке(handler хранит ссылку на какой-то поток)
-    //метод finish() также относиться к работе с view
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private AddNoteViewModel viewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
-        notesDatabase = NotesDatabase.getInstance(getApplication());
+        viewModel = new ViewModelProvider(this).get(AddNoteViewModel.class);
         initViews();
 
+        viewModel.getShouldCloseScreen().observe(this, isClosed -> {
+            if (isClosed) finish();
+        });
         buttonSaveNote.setOnClickListener(v -> saveNote());
     }
 
@@ -38,12 +38,7 @@ public class AddNoteActivity extends AppCompatActivity {
         String textNote = editTextNote.getText().toString().trim();
         int priority = getPriority();
         Note note = new Note(textNote, priority);
-        Thread thread = new Thread(() -> {
-            notesDatabase.notesDao().add(note);
-            handler.post(this::finish);
-        });
-        thread.start();
-
+        viewModel.saveNote(note);
     }
 
     private int getPriority() {

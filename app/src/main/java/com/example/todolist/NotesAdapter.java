@@ -74,7 +74,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         //устанавливаем слушатель клика и в методе onClick реагируем на клики
         holder.textViewNote.setOnClickListener(view -> {
             if (onNoteClickListener != null) {
-                onNoteClickListener.onNoteClick(note, view);
+                onNoteClickListener.onNoteClick(note);
             }
         });
     }
@@ -96,6 +96,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
     //определяем интерфейс слушатель клика по элементу списка
     interface OnNoteClickListener {
-        void onNoteClick(Note note, View view);
+        void onNoteClick(Note note);
     }
 }

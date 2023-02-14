@@ -2,15 +2,17 @@ package com.example.todolist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-        mainViewModel = new MainViewModel(getApplication());
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         notesAdapter = new NotesAdapter();
         //Установка вида отображения элементов vertical horizontal grid (в простых вариантах можно задать в макете)
@@ -36,12 +39,10 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.getNotes().observe(
                 this, (notes) -> notesAdapter.setNotes(notes));
 
+
         //в активити устанавливаем слушатель клика у адаптера на элемент(для этого добавим слушатель в адаптер с помощью интерфейса)
-        notesAdapter.setOnNoteClickListener((note, view) -> {
-            if (note.getText().trim().length() > 0) {
-                Snackbar.make(view, note.getText(), Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        notesAdapter.setOnNoteClickListener(note -> Toast.makeText(
+                this,"Swipe left to delete",Toast.LENGTH_SHORT).show());
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
