@@ -2,8 +2,6 @@ package com.example.todolist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //в активити устанавливаем слушатель клика у адаптера на элемент(для этого добавим слушатель в адаптер с помощью интерфейса)
-        notesAdapter.setOnNoteClickListener(note -> Toast.makeText(
-                this,"Swipe left to delete",Toast.LENGTH_SHORT).show());
+        notesAdapter.setOnNoteClickListener((view) -> Snackbar.make(
+                view, "Swipe left to delete", Snackbar.LENGTH_SHORT).show());
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
