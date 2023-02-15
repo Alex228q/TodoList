@@ -33,6 +33,7 @@ public class AddNoteViewModel extends AndroidViewModel {
         compositeDisposable.add(disposable);
     }
 
+
     public LiveData<Boolean> getShouldCloseScreen() {
         return shouldBeClosed;
     }
