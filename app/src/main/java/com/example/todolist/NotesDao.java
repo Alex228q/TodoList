@@ -1,11 +1,13 @@
 package com.example.todolist;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 //Интерфейс предостовляющий доступ к базе данных
 //DAO -> data access object(объект доступа к данным)
@@ -13,13 +15,12 @@ import java.util.List;
 public interface NotesDao {
 
     @Query("SELECT * FROM notes")
-        //Необходимо возвращать LIST,  room сам определит тип коллекции
-        //При возвращении обьекта LiveData мы сможем подписаться на его изменения и реагировать на них
-    LiveData<List<Note>> getNotes();
+    //обьект single позволяет подписаться на себя,от Completable отличаеться тем что умеет возвращать данные
+    Single<List<Note>> getNotes();
 
     @Insert
-    void add(Note note);
+    Completable add(Note note);
 
     @Query("DELETE FROM notes WHERE id = :id")
-    void remove(int id);
+    Completable remove(int id);
 }
